@@ -87,6 +87,34 @@ function filterBank(taps, numPaths) {
     return structure;
 }
 
+function register(n) {
+    let state = zeros(n);
+
+    function push(x) {
+        state = [...state, x];
+    }
+
+    function pop() {
+        let [head, ...tail] = state;
+        state = tail;
+        return head;
+    }
+
+    function dot(x) {
+        let result = 0.0;
+        for (let i=0; i < x.length; i++) {
+            result += x[i] * state[i];
+        }
+        return result;
+    }
+
+    return {
+        push,
+        pop,
+        dot,
+    };
+}
+
 function pulseShaper(config) {
     // Pull out configuration
     let {beta, sps, nSymbs} = config;
@@ -99,15 +127,15 @@ function pulseShaper(config) {
     let bank = filterBank(filterCoeffs, sps);  
 
     // Inisialize the filter state
-    let state = zeros(nSymbs);
+    let state = register(n);
 
     function next(xi) {
         // Update state
-        state = [...state,xi];
-        [h, ...state] = state;
+        state.push(xi);
+        state.pop();
 
         // Get outputs
-        let output = bank.map(path => dot(path, state));
+        let output = bank.map(path => state.dot(path));
 
         return output;
     }
