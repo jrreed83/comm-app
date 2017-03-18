@@ -41,24 +41,32 @@ function dot(x,y) {
     return result;
 }
 
+// We are explicitly taking advantage of the fact that the filter
+// is symmetric about 0
 function raisedCosineFilter(beta, sps, nSymbs) {
-    const nSamps = (nSymbs * sps >> 1) + 1; // back half of filter   
+    let n  = sps * nSymbs / 2;
 
-    let back = range(nSamps)
-        .map((i) => {
-            if (i === sps/(2*beta)) {
-                return Math.PI * sinc(0.5/beta);
-            } else {
-                let ii = i / sps;
-                xi = sinc(ii) * Math.cos(Math.PI * beta * ii) / (1 - Math.pow(2.0 * beta * ii,2));
-                return xi;
+    function inner(coeffs,i) {
+        let xi;
+        if (i > n) {
+            return coeffs;
+        }
+        else {
+            switch (i) {
+                case sps / (2*beta):
+                    xi = Math.PI * sinc(0.5/beta);
+                    break;
+                default:
+                    let ii = i / sps;
+                    xi = sinc(ii) * Math.cos(Math.PI * beta * ii) / (1 - Math.pow(2.0 * beta * ii,2));
+                    break;
             }
-        });
-    
-    [head, ...tail] = back;
-    let front = tail.reverse();
-    let total = [...front, ...back];
-    return total;
+            return inner([xi,...coeffs, xi], i+1);
+        }
+    }
+
+    return inner([1.0],1,n);
+
 }
 
 function filterBank(taps, numPaths) {
@@ -117,6 +125,15 @@ function pulseShaper(config) {
         getState,
         getBank,
     };
+}
+
+function testFilter() {
+    let bits = [1,-1,1,-1,1,-1];
+    let shaper = pulseShaper({beta: 0.5, sps: 4, nSymbs: 5});
+    let output = bits
+        .map(bit => shaper.next(bit))
+        .reduce((accum,samples) => accum.concat(samples),[])
+    return 
 }
 
 module.exports = {
