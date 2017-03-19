@@ -1,38 +1,54 @@
 <html>
   <head>
-    <title>MEAN is best</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.3.1/css/foundation.min.css">
+    <script src=https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js></script>    
     <script src="js/filters.js"></script>
+
   </head>
   <body>
+    <br>
+    <div class="row">
+      <div class="large-12 columns">
+        <label>
+          <h4>Message</h4>
+          <input type="text" placeholder="Enter your message here" />
+        </label>
+      </div>
+    </div>  
 
-  <div class="row">
-    <div class="large-12 columns">
-      <h1>Digital Communications</h1>
+    <div class="row">
+      <div class="large-12 columns">
+        <button class="button" id="my-button" onclick="onClick()"> Click Me </button>
+      </div>
     </div>
-  </div>
 
-  <div class="row">
-    <div class="large-12 columns">
-      <label>Bits
-        <input type="text" placeholder="0/1 Pattern" />
-      </label>
+    <div class="row">
+      <canvas id="canvas" height=100></canvas>
     </div>
-  </div>   
-  <div class="row">
-    <div class="large-12 columns">
-      <button class="button" id="my-button" onclick="onClick()"> Click Me </button>
-    </div>
-  </div>
-
-    <script> 
-      function onClick() {
-        alert('You clicked');
+    <script>
+      let ctx  = document.getElementById('canvas'); 
+      let data = {
+        labels: [],
+        datasets: [
+          {
+            data:[],
+          }
+        ]
       }
-      //let element = document.getElementById('my-button');
-      //element.addEventListener('click', () => {
-      //  alert('You clicked')
-      //});
+
+      let myLineChart = new Chart(ctx, {
+        type: 'line',
+        data: data,
+      });
+
+      function onClick() {
+        data.datasets[0].data = raisedCosineFilter(0.5,4,5);
+        data.labels = range(21);
+        myLineChart.update();        
+      }
+  
+
+
     </script>
 
   </body>
