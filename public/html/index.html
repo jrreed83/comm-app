@@ -7,38 +7,48 @@
   </head>
   <body>
     <br>
-    <form>
-      <div class="row">
-        <div class="large-4 columns">
-          <label>
-            <h5>Samples Per Symbol</h5>
-            <input type="number" placeholder="Enter an even integer here" />
-          </label>
-        </div>
-        <div class="large-4 columns">
-          <label>
-            <h5>Roll Off Factor</h5>
-            <input type="number" placeholder="Enter an even integer here" />
-          </label>
-        </div>        
-        <div class="large-4 columns">
-          <label>
-            <h5>Number of Symbol Periods</h5>
-            <input type="number" placeholder="Enter an even integer here" />
-          </label>
-        </div>          
-       </div>
-      </form>
-      <div class="row">
-        <div class="large-12 columns text-right">
-          <button class="button" id="my-button" onclick="onClick()"> Click Me </button>
+    <div class="row">
+
+      <div class="large-3 columns">
+        <form>
+          <div class="row">
+            <div class="large-12 columns">
+              <label>
+                Samples Per Symbol
+                <input type="number" placeholder="Enter an even integer here" id="sps" />
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="large-12 columns">
+              <label>
+                Roll Off Factor
+                <input type="number" placeholder="Enter an even integer here" id="roll-off"/>
+              </label>
+            </div>        
+          </div>
+          <div class="row">
+            <div class="large-12 columns">
+              <label>
+                Number of Symbol Periods
+                <input type="number" placeholder="Enter an even integer here" id="symbol-periods"/>
+              </label>
+            </div>          
+          </div>
+        </form>
+        <div class="row">
+          <div class="large-12 columns">
+            <button class="button" id="my-button" onclick="onClick()"> Click Me </button>
+          </div>
         </div>
       </div>
-
-    <div class="row">
-      <canvas id="canvas" height=100 width=400></canvas>
-    </div>
     
+      <div class="large-9 columns">
+        <br>
+        <canvas id="canvas" height=100 width=400></canvas>
+      </div>
+    </div>
+
     <script>
       let ctx  = document.getElementById('canvas'); 
       let data = {
@@ -69,7 +79,17 @@
 
       function onClick() {
         // Pull data out of form
-        let taps = raisedCosineFilter(0.5,16,5);
+        let sps    = document.getElementById('sps').value;
+        let beta   = document.getElementById('roll-off').value;
+        let nSymbs = document.getElementById('symbol-periods').value;  
+
+        sps  = parseInt(sps);
+        beta = parseFloat(beta);
+        nSymnbs = parseFloat(nSymbs); 
+        // Constraints 
+
+        // Compute and update chart
+        let taps = raisedCosineFilter(beta,sps,nSymbs);
         data.datasets[0].data = [...taps];
         data.labels = range(taps.length);
         myLineChart.update();        
