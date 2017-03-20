@@ -7,24 +7,38 @@
   </head>
   <body>
     <br>
-    <div class="row">
-      <div class="large-12 columns">
-        <label>
-          <h4>Message</h4>
-          <input type="text" placeholder="Enter your message here" />
-        </label>
+    <form>
+      <div class="row">
+        <div class="large-4 columns">
+          <label>
+            <h5>Samples Per Symbol</h5>
+            <input type="number" placeholder="Enter an even integer here" />
+          </label>
+        </div>
+        <div class="large-4 columns">
+          <label>
+            <h5>Roll Off Factor</h5>
+            <input type="number" placeholder="Enter an even integer here" />
+          </label>
+        </div>        
+        <div class="large-4 columns">
+          <label>
+            <h5>Number of Symbol Periods</h5>
+            <input type="number" placeholder="Enter an even integer here" />
+          </label>
+        </div>          
+       </div>
+      </form>
+      <div class="row">
+        <div class="large-12 columns text-right">
+          <button class="button" id="my-button" onclick="onClick()"> Click Me </button>
+        </div>
       </div>
-    </div>  
 
     <div class="row">
-      <div class="large-12 columns">
-        <button class="button" id="my-button" onclick="onClick()"> Click Me </button>
-      </div>
+      <canvas id="canvas" height=100 width=400></canvas>
     </div>
-
-    <div class="row">
-      <canvas id="canvas" height=100></canvas>
-    </div>
+    
     <script>
       let ctx  = document.getElementById('canvas'); 
       let data = {
@@ -39,16 +53,27 @@
       let myLineChart = new Chart(ctx, {
         type: 'line',
         data: data,
+        options: {
+          legend: {
+            display: false
+          },
+          scales: {
+            xAxes: [{
+              ticks: {
+                maxTicksLimit: 10
+              }
+            }]
+          }
+        },
       });
 
       function onClick() {
-        data.datasets[0].data = raisedCosineFilter(0.5,4,5);
-        data.labels = range(21);
+        // Pull data out of form
+        let taps = raisedCosineFilter(0.5,16,5);
+        data.datasets[0].data = [...taps];
+        data.labels = range(taps.length);
         myLineChart.update();        
       }
-  
-
-
     </script>
 
   </body>
