@@ -150,6 +150,6 @@ function testFilter() {
     return 
 }
 
-//module.exports = {
-//    pulseShaper,
-//};        
+module.exports = {
+    register,
+};        
