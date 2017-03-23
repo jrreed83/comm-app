@@ -139,17 +139,4 @@ function pulseShaper(config) {
         getState,
         getBank,
     };
-}
-
-function testFilter() {
-    let bits = [1,-1,1,-1,1,-1];
-    let shaper = pulseShaper({beta: 0.5, sps: 4, nSymbs: 5});
-    let output = bits
-        .map(bit => shaper.next(bit))
-        .reduce((accum,samples) => accum.concat(samples),[])
-    return 
-}
-
-module.exports = {
-    register,
-};        
+}   
