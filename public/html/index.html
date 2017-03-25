@@ -6,9 +6,21 @@
   </head>
   <body>
     <div class="container">
-      <div class="row">
 
-        <div class="col-md-3">
+      <div class="row">
+        <div class="col-md-12">
+          <h1> Raised Cosine Filter </h1>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <canvas id="canvas" height=100 width=400></canvas>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
           <form>
             <div class="form-group">
               <label> Samples Per Symbol </label>
@@ -25,12 +37,9 @@
             <button class="btn btn-primary" type="button" id="my-button" onclick="onClick()"> Click Me </button>
           </form>
         </div>
-    
-        <div class="col-md-9">
-          <canvas id="canvas" height=100 width=400></canvas>
-        </div>
       </div>
     </div>
+    
     <script>
       let ctx  = document.getElementById('canvas'); 
       let data = {
