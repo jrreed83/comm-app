@@ -66,9 +66,38 @@ function raisedCosineFilter(beta, sps, nSymbs) {
     }
 
     return inner([1.0],1,n);
-
 }
 
+function rootRaisedCosineFilter(beta, sps, nSymbs) {
+    let n  = sps * nSymbs / 2;
+
+    function inner(coeffs,i) {
+        let xi;
+        let sin;
+        let cos;
+        if (i > n) {
+            return coeffs;
+        }
+        else {
+            switch (i) {
+                case sps / (4*beta):
+                    sin = Math.sin(Math.PI/(4*beta));
+                    cos = Math.cos(Math.PI/(4*beta));
+                    xi = (beta/Math.sqrt(2)) * ( sin * (1+(2/Math.PI))  +  cos * (1-(2/Math.PI)));
+                    break;
+                default:
+                    let ii  = i / sps;
+                    sin = Math.sin(Math.PI*ii*(1-beta));
+                    cos = Math.cos(Math.PI*ii*(1+beta));
+                    xi = (sin + (4 * beta * ii * cos)) / (Math.PI*ii*(1 - Math.pow(4*beta*ii,2)));
+                    break;
+            }
+            return inner([xi,...coeffs, xi], i+1);
+        }
+    }
+    let x0 = 1 - beta + 4*(beta / Math.PI);
+    return inner([x0],1,n);
+}
 function filterBank(taps, numPaths) {
     const tapsPerPath = taps.length / numPaths;
     let i;

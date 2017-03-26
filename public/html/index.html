@@ -39,7 +39,7 @@
         </div>
       </div>
     </div>
-    
+
     <script>
       let ctx  = document.getElementById('canvas'); 
       let data = {
@@ -80,7 +80,7 @@
         // Constraints 
 
         // Compute and update chart
-        let taps = raisedCosineFilter(beta,sps,nSymbs);
+        let taps = rootRaisedCosineFilter(beta,sps,nSymbs);
         data.datasets[0].data = [...taps];
         data.labels = range(taps.length);
         myLineChart.update();        
